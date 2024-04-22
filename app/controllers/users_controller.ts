@@ -61,4 +61,9 @@ export default class UsersController {
 
     return response.noContent()
   }
+
+  async verificationToken({ request, response }: HttpContext) {
+    const { verificationToken } = request.param('verificationToken')
+    
+  }
 }

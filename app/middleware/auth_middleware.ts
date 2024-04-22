@@ -19,7 +19,8 @@ export default class AuthMiddleware {
       guards?: (keyof Authenticators)[]
     } = {}
   ) {
-    await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
+    const user = await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
+    if (user.inactive) throw Error('User is not active')
     return next()
   }
 }
