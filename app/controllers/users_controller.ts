@@ -1,7 +1,6 @@
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import { keyChecker } from '../utils/utils.js'
-import { AccessToken } from '@adonisjs/auth/access_tokens'
 
 export default class UsersController {
   async create({ request, response }: HttpContext) {
