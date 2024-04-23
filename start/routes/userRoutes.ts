@@ -7,5 +7,5 @@ export const UserRoutes = () => {
   router.post('/create', [UsersController, 'create'])
   router.post('/login', [UsersController, 'login'])
   router.post('/logout', [UsersController, 'logout'])
-  router.post('/verification', [UsersController, 'verificationToken'])
+  router.get('/me', [UsersController, 'refreshUser'])
 }

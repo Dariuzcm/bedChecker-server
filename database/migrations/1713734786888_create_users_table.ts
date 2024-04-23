@@ -6,6 +6,7 @@ export default class extends BaseSchema {
   async up() {
     this.schema.alterTable(this.tableName, (table) => {
       table.boolean('inactive').after('password').nullable()
+      table.boolean('verificated').after('password').nullable()
       table.integer('employee_number', 25).after('password').nullable()
       table.unique('email')
     })

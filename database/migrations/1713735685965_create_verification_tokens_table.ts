@@ -8,8 +8,9 @@ export default class extends BaseSchema {
       table.increments('id')
       table.integer('token', 5)
       table.boolean('checked').defaultTo(false)
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
+      table.integer('user_id').unsigned().references('users.id')
+      table.timestamp('created_at').nullable()
+      table.timestamp('updated_at').nullable()
     })
   }
 

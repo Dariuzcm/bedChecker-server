@@ -1,12 +1,13 @@
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import { keyChecker } from '../utils/utils.js'
+import { AccessToken } from '@adonisjs/auth/access_tokens'
 
 export default class UsersController {
   async create({ request, response }: HttpContext) {
-    const keys = ['fullName', 'email', 'password']
+    const keys = ['name', 'email', 'password']
     const fields = request.only(keys)
-    const { fullName, email, password } = fields
+    const { name: fullName, email, password } = fields
 
     const missingKeys = keyChecker(keys, fields)
 
@@ -29,8 +30,16 @@ export default class UsersController {
       password,
     })
     await user.save()
-    return user
+    const logged = await User.verifyCredentials(email, password)
+    const accessToken = await User.accessTokens.create(user, ['*'], {
+      name: 'accessToken',
+    })
+    return {
+      user: logged,
+      token: accessToken,
+    }
   }
+
   async login({ response, request }: HttpContext) {
     const keys = ['email', 'password']
     const fields = request.only(keys)
@@ -45,7 +54,7 @@ export default class UsersController {
     }
 
     const user = await User.verifyCredentials(email, password)
-    const accessToken = await User.accessTokens.create(user, ['+'], {
+    const accessToken = await User.accessTokens.create(user, ['*'], {
       name: 'accessToken',
     })
 
@@ -54,6 +63,7 @@ export default class UsersController {
       token: accessToken,
     }
   }
+
   async logout({ auth, response }: HttpContext) {
     const user = await auth.authenticate()
     const identifer = user.currentAccessToken.identifier
@@ -62,8 +72,8 @@ export default class UsersController {
     return response.noContent()
   }
 
-  async verificationToken({ request, response }: HttpContext) {
-    const { verificationToken } = request.param('verificationToken')
-    
+  async refreshUser({ auth }: HttpContext) {
+    const user: User = (await auth.authenticate()) as User
+    return user
   }
 }
