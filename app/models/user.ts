@@ -37,6 +37,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column({ columnName: 'employee_number' })
   declare employeeNumber: number
 
+  @column({ columnName: 'photo' })
+  declare photo: string
+
   @column()
   declare inactive: boolean
 

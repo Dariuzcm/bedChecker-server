@@ -4,9 +4,9 @@ import { keyChecker } from '../utils/utils.js'
 
 export default class UsersController {
   async create({ request, response }: HttpContext) {
-    const keys = ['name', 'email', 'password']
+    const keys = ['name', 'email', 'password', 'employeeNumber']
     const fields = request.only(keys)
-    const { name: fullName, email, password } = fields
+    const { name: fullName, email, password, employeeNumber } = fields
 
     const missingKeys = keyChecker(keys, fields)
 
@@ -27,6 +27,7 @@ export default class UsersController {
       fullName,
       email,
       password,
+      employeeNumber,
     })
     await user.save()
     const logged = await User.verifyCredentials(email, password)
@@ -37,6 +38,19 @@ export default class UsersController {
       user: logged,
       token: accessToken,
     }
+  }
+
+  async update({ request, auth, response }: HttpContext) {
+    const user = await auth.authenticate()
+    const toUpdate = request.body()
+
+    user.fullName = toUpdate.name
+    user.email = toUpdate.email
+    user.employeeNumber = toUpdate.employeeNumber
+
+    await user.save()
+
+    return response.ok(user)
   }
 
   async login({ response, request }: HttpContext) {
