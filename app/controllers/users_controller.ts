@@ -1,6 +1,7 @@
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import { keyChecker } from '../utils/utils.js'
+import GoogleapiProvider from '#providers/googleapi_provider'
 
 export default class UsersController {
   async create({ request, response }: HttpContext) {
@@ -88,5 +89,19 @@ export default class UsersController {
   async refreshUser({ auth }: HttpContext) {
     const user: User = (await auth.authenticate()) as User
     return user
+  }
+
+  async savePicture({ auth, request, response }: HttpContext) {
+    const user = (await auth.authenticate()) as User
+    const file = await request.file('avatar')
+    if (file) {
+      const google = GoogleapiProvider
+      const photoRef = await google.updateFile(user, file)
+      if (photoRef) {
+        user.photo = `https://drive.usercontent.google.com/download?id=${photoRef}`
+        await user.save()
+      }
+    }
+    return response.accepted(user)
   }
 }
