@@ -3,7 +3,6 @@ import { google } from 'googleapis'
 // @ts-ignore
 import apikey from '../sources/bedchecker.json' assert { type: 'json' }
 import User from '#models/user'
-import env from '#start/env'
 import { MultipartFile } from '@adonisjs/core/bodyparser'
 import fs from 'node:fs'
 import logger from '@adonisjs/core/services/logger'

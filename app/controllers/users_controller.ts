@@ -2,7 +2,6 @@ import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import { keyChecker } from '../utils/utils.js'
 import GoogleapiProvider from '#providers/googleapi_provider'
-import { google } from 'googleapis'
 
 export default class UsersController {
   async create({ request, response }: HttpContext) {
