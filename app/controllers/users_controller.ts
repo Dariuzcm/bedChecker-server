@@ -98,6 +98,7 @@ export default class UsersController {
       const google = GoogleapiProvider
       const photoRef = await google.updateFile(user, file)
       if (photoRef) {
+        user.photoId = photoRef
         user.photo = `https://drive.usercontent.google.com/download?id=${photoRef}`
         await user.save()
       }

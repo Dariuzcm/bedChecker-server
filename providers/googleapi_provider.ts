@@ -6,6 +6,7 @@ import User from '#models/user'
 import env from '#start/env'
 import { MultipartFile } from '@adonisjs/core/bodyparser'
 import fs from 'node:fs'
+import logger from '@adonisjs/core/services/logger'
 
 export default class GoogleapiProvider {
   constructor(protected app: ApplicationService) {}
@@ -58,9 +59,18 @@ export default class GoogleapiProvider {
   static async updateFile(user: User, multipartFile: MultipartFile) {
     const drive = google.drive({ version: 'v3', auth: this.googleAuth })
     const path = multipartFile.tmpPath
-    // const exist = drive.files.get({
-    //   fileId: user.photo,
-    // })
+    try {
+      const exist = await drive.files.get({
+        fileId: user.photoId,
+      })
+      if (exist) {
+        drive.files.delete({
+          fileId: user.photoId,
+        })
+      }
+    } catch (error) {
+      logger.warn(error.message)
+    }
 
     if (path) {
       const file = fs.createReadStream(path)
