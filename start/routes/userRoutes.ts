@@ -10,4 +10,5 @@ export const UserRoutes = () => {
   router.get('/me', [UsersController, 'refreshUser'])
   router.put('/', [UsersController, 'update'])
   router.post('/photo', [UsersController, 'savePicture'])
+  router.get('/photo/:photoId', [UsersController, 'getAvatar'])
 }

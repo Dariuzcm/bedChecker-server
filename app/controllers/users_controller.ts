@@ -2,6 +2,7 @@ import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import { keyChecker } from '../utils/utils.js'
 import GoogleapiProvider from '#providers/googleapi_provider'
+import { google } from 'googleapis'
 
 export default class UsersController {
   async create({ request, response }: HttpContext) {
@@ -95,14 +96,26 @@ export default class UsersController {
     const user = (await auth.authenticate()) as User
     const file = await request.file('avatar')
     if (file) {
-      const google = GoogleapiProvider
-      const photoRef = await google.updateFile(user, file)
-      if (photoRef) {
-        user.photoId = photoRef
-        user.photo = `https://drive.usercontent.google.com/download?id=${photoRef}`
+      const photoRef = await GoogleapiProvider.updateFile(user, file)
+      if (photoRef?.data.id) {
+        user.photoId = photoRef.data.id
+        user.photo = `http://${request.headers().host}${request.url(true)}/${photoRef.data.id}`
         await user.save()
       }
     }
     return response.accepted(user)
+  }
+
+  async getAvatar({ response, request }: HttpContext) {
+    const identifer = request.param('photoId')
+
+    const img = await GoogleapiProvider.getFile(identifer)
+    if (img?.data) {
+      const blob: Blob = img?.data as unknown as Blob
+      //@ts-ignore
+      return response.stream(blob.stream())
+    } else {
+      return response.notFound()
+    }
   }
 }

@@ -21,13 +21,13 @@ export default class GoogleapiProvider {
    * The container bindings have booted
    */
   async boot() {
-    const jwtClient = new google.auth.JWT(
-      apikey.client_email,
-      undefined,
-      apikey.private_key,
-      this.SCOPE
-    )
-    const credentials = await jwtClient.authorize()
+    // const jwtClient = new google.auth.JWT(
+    //   apikey.client_email,
+    //   undefined,
+    //   apikey.private_key,
+    //   this.SCOPE
+    // )
+    // const credentials = await jwtClient.authorize()
 
     try {
       // const auth = google.auth.fromJSON(apikey)
@@ -37,7 +37,7 @@ export default class GoogleapiProvider {
       })
       GoogleapiProvider.googleAuth = client
     } catch (error) {
-      console.log(error)
+      logger.error(error.message)
     }
   }
 
@@ -69,7 +69,7 @@ export default class GoogleapiProvider {
         })
       }
     } catch (error) {
-      logger.warn(error.message)
+      logger.warn(error, error.message)
     }
 
     if (path) {
@@ -95,10 +95,23 @@ export default class GoogleapiProvider {
             },
           }
         )
-        return fileUploaded.data.id
+        return fileUploaded
       } catch (error) {
-        console.log(error)
+        logger.error(error, error.message)
       }
+    }
+  }
+
+  static async getFile(identifer: string) {
+    const drive = google.drive({ version: 'v3', auth: this.googleAuth })
+    try {
+      const exist = await drive.files.get({
+        fileId: identifer,
+        alt: 'media',
+      })
+      return exist
+    } catch (error) {
+      logger.warn(error, error.message)
     }
   }
 }
