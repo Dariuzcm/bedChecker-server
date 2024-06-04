@@ -4,6 +4,7 @@ import { randomUUID, type UUID } from 'node:crypto'
 import type { HasOne } from '@adonisjs/lucid/types/relations'
 import Bed from '#models/bed'
 import Service from '#models/service'
+import User from '#models/user'
 
 export const enum Status {
   PREPARE = 'PREPARE',
@@ -22,17 +23,20 @@ export default class Movement extends BaseModel {
   @column()
   declare notes?: string
 
-  @column({ columnName: 'user_id' })
-  declare userId: number
+  @column({ columnName: 'user_id', serializeAs: null })
+  declare userId: number | string
+
+  @hasOne(() => User)
+  declare user: HasOne<typeof User>
 
   @column()
-  declare bedId?: number
+  declare bedId?: number | string
 
   @hasOne(() => Bed)
   declare bed: HasOne<typeof Bed>
 
   @column()
-  declare serviceId?: number
+  declare serviceId?: number | string
 
   @hasOne(() => Service)
   declare service: HasOne<typeof Service>
