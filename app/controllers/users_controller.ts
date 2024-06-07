@@ -96,7 +96,7 @@ export default class UsersController {
       const photoRef = await GoogleapiProvider.updateFile(user, file)
       if (photoRef?.data.id) {
         user.photoId = photoRef.data.id
-        user.photo = `http://${request.headers().host}${request.url(true)}/${photoRef.data.id}`
+        user.photo = photoRef.data.id
         await user.save()
       }
     }
