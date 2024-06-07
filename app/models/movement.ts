@@ -32,13 +32,13 @@ export default class Movement extends BaseModel {
   @column()
   declare bedId?: number | string
 
-  @hasOne(() => Bed)
+  @hasOne(() => Bed, { localKey: 'bedId', foreignKey: 'bedId' })
   declare bed: HasOne<typeof Bed>
 
   @column()
   declare serviceId?: number | string
 
-  @hasOne(() => Service)
+  @hasOne(() => Service, { localKey: 'serviceId', foreignKey: 'serviceId' })
   declare service: HasOne<typeof Service>
 
   @column.dateTime()
@@ -58,7 +58,6 @@ export default class Movement extends BaseModel {
 
   @beforeCreate()
   static beforeCreateMovement(movement: Movement) {
-    movement.status = Status.PREPARE
     movement.uuid = randomUUID()
   }
 }

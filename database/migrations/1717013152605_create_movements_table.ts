@@ -13,7 +13,9 @@ export default class extends BaseSchema {
       table.integer('user_id', 10).unsigned().nullable().references('users.id')
       table.dateTime('begin').nullable()
       table.dateTime('end').nullable()
-      table.enu('status', ['PREPARE', 'ON_TRANSIT', 'FINISH', 'CANCELED']).notNullable()
+      table
+        .enu('status', ['PREPARE', 'ON_TRANSIT', 'FINISH', 'CANCELED', 'ON_RETURNING'])
+        .notNullable()
       table.timestamp('created_at').nullable()
       table.timestamp('updated_at').nullable()
     })

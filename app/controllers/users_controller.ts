@@ -32,9 +32,7 @@ export default class UsersController {
     })
     await user.save()
     const logged = await User.verifyCredentials(email, password)
-    const accessToken = await User.accessTokens.create(user, ['*'], {
-      name: 'accessToken',
-    })
+    const accessToken = await User.accessTokens.create(user, ['*'])
     return {
       user: logged,
       token: accessToken,
