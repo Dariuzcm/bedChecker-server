@@ -2,6 +2,7 @@ import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import { keyChecker } from '../utils/utils.js'
 import GoogleapiProvider from '#providers/googleapi_provider'
+import logger from '@adonisjs/core/services/logger'
 
 export default class UsersController {
   async create({ request, response }: HttpContext) {
@@ -107,6 +108,7 @@ export default class UsersController {
     const identifer = request.param('photoId')
 
     const img = await GoogleapiProvider.getFile(identifer)
+    logger.info({ img })
     if (img?.data) {
       const blob: Blob = img?.data as unknown as Blob
       //@ts-ignore
