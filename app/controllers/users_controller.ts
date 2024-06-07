@@ -108,7 +108,7 @@ export default class UsersController {
     const identifer = request.param('photoId')
 
     const img = await GoogleapiProvider.getFile(identifer)
-    logger.info({ img })
+
     if (img?.data) {
       const blob: Blob = img?.data as unknown as Blob
       //@ts-ignore
