@@ -7,6 +7,7 @@ export const MovementsRoutes = () => {
   router.post('/', [Movements, 'create'])
   router.get('/', [Movements, 'getAllMovements'])
   router.get('/last', [Movements, 'getLast'])
+  router.get('/week', [Movements, 'getWeekMovements'])
   router.put('/:movementUuid', [Movements, 'update'])
   router.delete('/:movementUuid', [Movements, 'cancelMovement'])
 }
